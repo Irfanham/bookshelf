@@ -14,7 +14,7 @@ function generateBooksObject(id, title, author, year, isCompleted) {
     id,
     title,
     author,
-    year,
+    year:parseInt(year),
     isCompleted,
   };
 }
@@ -159,7 +159,7 @@ function toggleBookStatus(bookId) {
 //hapus buku
 function deleteBook(bookId) {
   if (confirm("Apakah Anda yakin ingin menghapus buku ini?")) {
-    const book = findBookIndex(bookId);
+    const book = books.findIndex((book)=>book.id == bookId)
     if (book === -1) return;
     books.splice(book, 1);
     document.dispatchEvent(new Event(RENDER_EVENT));
@@ -202,7 +202,7 @@ function showToast(message, type = "success", icon = "") {
   // Animate
   setTimeout(() => {
     toast.classList.add("show");
-  }, 100);
+  }, 1000);
 
   // Auto remove 3s
   setTimeout(() => {
@@ -214,7 +214,7 @@ function showToast(message, type = "success", icon = "") {
         }
       }, 300);
     }
-  }, 2000);
+  }, 4000);
 }
 //Open Modal Edit
 function openEditModal(bookId) {
@@ -246,11 +246,13 @@ function editBook(id, title, author, year, isCompleted) {
       id,
       title,
       author,
-      year,
+      year:parseInt(year),
       isCompleted,
     };
     saveData();
     document.dispatchEvent(new Event(RENDER_EVENT));
+    showToast("Data buku diperbarui", "success");
+
   }
 }
 
@@ -271,6 +273,7 @@ document.addEventListener("DOMContentLoaded", function () {
   submitForm.addEventListener("submit", function (event) {
     event.preventDefault();
     addBook();
+    submitForm.reset();
   });
   if (isStorageExist()) {
     loadDataFromStorage();
